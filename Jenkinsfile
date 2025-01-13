@@ -3,39 +3,45 @@ pipeline{
     stages{
         stage('checkout the code from github'){
             steps{
-                 git url: 'https://github.com/akshu20791/Banking-java-project/'
+                 git url: 'https://github.com/bhardwajtulsiram/capstone-banking-java-project'
                  echo 'github url checkout'
             }
         }
-        stage('codecompile with akshat'){
+        stage('compile code'){
             steps{
                 echo 'starting compiling'
                 sh 'mvn compile'
             }
         }
-        stage('codetesting with akshat'){
+        stage('testing the code'){
             steps{
                 sh 'mvn test'
             }
         }
-        stage('qa with akshat'){
+        stage('qa with checkstyle'){
             steps{
                 sh 'mvn checkstyle:checkstyle'
             }
         }
-        stage('package with akshat'){
+        stage('package the code'){
             steps{
                 sh 'mvn package'
             }
         }
+	stage('install docker'){
+          steps{
+               sh 'apt install docker.io -y'
+           }
+         }
+
         stage('run dockerfile'){
           steps{
-               sh 'docker build -t myimg .'
+               sh 'docker build -t financeimg .'
            }
          }
         stage('port expose'){
             steps{
-                sh 'docker run -dt -p 8091:8091 --name c000 myimg'
+                sh 'docker run -dt -p 8091:8091 --name container1 financeimg'
             }
         }   
     }
