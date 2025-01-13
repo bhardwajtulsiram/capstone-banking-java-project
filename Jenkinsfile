@@ -28,12 +28,7 @@ pipeline{
                 sh 'mvn package'
             }
         }
-	stage('install docker'){
-          steps{
-               sh 'apt install docker.io -y'
-           }
-         }
-
+	
         stage('run dockerfile'){
           steps{
                sh 'docker build -t financeimg .'
