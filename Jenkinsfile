@@ -34,21 +34,21 @@ pipeline {
         sh 'docker build -t tulsiramdocker/financeimg:v1 .'
       }
     }
-	
-	stage('Docker Login') {
+
+    stage('Docker Login') {
       steps {
         withCredentials([string(credentialsId: 'dockerhubpasswd', variable: 'dockerhubpasswd')]) {
-		sh 'docker login -u tulsiramdocker -p ${dockerhubpasswd}'
-		}	
+          sh 'docker login -u tulsiramdocker -p ${dockerhubpasswd}'
+        }
       }
     }
-	
-	stage('Docker Push') {
+
+    stage('Docker Push') {
       steps {
-		sh 'docker push tulsiramdocker/financeimg:v1'
-		}	
+        sh 'docker push tulsiramdocker/financeimg:v1'
       }
-	
+    }
+
     stage('Invoke Ansible Playbook') {
       steps {
         ansiblePlaybook become: true, credentialsId: 'ansible', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: 'ansible-playbook.yml', vaultTmpPath: ''
