@@ -29,21 +29,29 @@ pipeline {
       }
     }
 
-    stage('Execute Ansible Playbook for Docker Configuration') {
-      steps {
-        echo 'Executing Ansible Playbook'
-        sh '''
-        ansible - playbook configure_docker.yml '''
-      }
-    }
     stage('run dockerfile') {
       steps {
-        sh 'docker build -t financeimg .'
+        sh 'docker build -t tulsiramdocker/financeimg:v1 .'
       }
     }
-    stage('port expose') {
+	
+	stage('Docker Login') {
       steps {
-        sh 'docker run -dt -p 8091:8091 --name container1 financeimg'
+        withCredentials([string(credentialsId: 'dockerhubpasswd', variable: 'dockerhubpasswd')]) {
+		sh 'docker login -u tulsiramdocker -p ${dockerhubpasswd}'
+		}	
+      }
+    }
+	
+	stage('Docker Push') {
+      steps {
+		sh 'docker push tulsiramdocker/financeimg:v1'
+		}	
+      }
+	
+    stage('Invoke Ansible Playbook') {
+      steps {
+        ansiblePlaybook become: true, credentialsId: 'ansible', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: 'ansible-playbook.yml', vaultTmpPath: ''
       }
     }
   }
