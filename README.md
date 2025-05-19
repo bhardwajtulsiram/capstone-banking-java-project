@@ -1,6 +1,6 @@
 # Capstone Banking Java Project CI/CD Pipeline
 
-This project demonstrates a CI/CD pipeline for a Java-based banking application using Jenkins Pipeline, Docker, and Ansible. The process automates code building, testing, containerization, and deployment to EC2 instances.
+This project demonstrates a CI/CD pipeline for a Java-based banking application using Jenkins Pipeline, Docker, Ansible and Terraform for AWS infrastructure automation. The process automates code building, testing, containerization, and deployment to EC2 instances.
 
 ---
 
@@ -9,6 +9,7 @@ This project demonstrates a CI/CD pipeline for a Java-based banking application 
 - **Jenkins** server with required plugins (Pipeline, Docker, Ansible, Credentials, etc.)
 - **DockerHub** account and credentials stored in Jenkins (used for pushing images)
 - **Ansible** installed and configured on Jenkins
+- **Terraform** installed locally using VS Code
 - **AWS EC2** Linux instances accessible via SSH and listed in the Ansible inventory
 - **Java 11**, **Maven**, **Docker** installed on build agents
 
@@ -18,29 +19,32 @@ This project demonstrates a CI/CD pipeline for a Java-based banking application 
 
 The CI/CD pipeline consists of the following automated stages (see `Jenkinsfile`):
 
-1. **Checkout Source Code**
+1. **Provision Infrastructure with Terraform**
+   - Use Terraform scripts to provision AWS EC2 instances (and optionally other resources) for deployment.
+
+2.  **Checkout Source Code**
    - Jenkins checks out the code from GitHub.
 
-2. **Compile Code**
+3. **Compile Code**
    - Compiles the project using Maven
 
-3. **Run Tests**
+4. **Run Tests**
    - Executes all unit and integration tests: `mvn test`
 
-4. **Quality Assurance**
+5. **Quality Assurance**
    - Runs Checkstyle to ensure code quality
 
-5. **Package Application**
+6. **Package Application**
    - Packages the application as a JAR
 
-6. **Build Docker Image**
+7. **Build Docker Image**
    - Builds a Docker image using the `Dockerfile`:
 
-7. **Docker Login & Push**
+8. **Docker Login & Push**
    - Logs in to DockerHub using Jenkins credentials
    - Pushes the image
 
-8. **Deploy with Ansible**
+9. **Configuration Management and Deploy with Ansible**
    - Runs `ansible-playbook.yml` to:
      - Update apt repositories
      - Install Docker on EC2 instances (if needed)
@@ -82,6 +86,7 @@ The CI/CD pipeline consists of the following automated stages (see `Jenkinsfile`
 
 ## Troubleshooting
 
+- **Terraform Apply Issues:** Ensure your AWS credentials are valid and IAM permissions are sufficient
 - **Docker Push Fails:** Check DockerHub credentials in Jenkins
 - **Ansible SSH Issues:** Ensure Jenkins has SSH access to EC2s, and inventory file is correct
 - **Ports:** Ensure port 8091 is open in the EC2 security group
