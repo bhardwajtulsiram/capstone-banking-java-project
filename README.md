@@ -76,7 +76,7 @@ The CI/CD pipeline consists of the following automated stages (see `Jenkinsfile`
 
 ### Dockerfile
 
-- Builds a containerized Java app running on port 8091
+- Builds a containerized Java app running on port 8099
 
 ### ansible-playbook.yml
 
@@ -89,7 +89,7 @@ The CI/CD pipeline consists of the following automated stages (see `Jenkinsfile`
 - **Terraform Apply Issues:** Ensure your AWS credentials are valid and IAM permissions are sufficient
 - **Docker Push Fails:** Check DockerHub credentials in Jenkins
 - **Ansible SSH Issues:** Ensure Jenkins has SSH access to EC2s, and inventory file is correct
-- **Ports:** Ensure port 8091 is open in the EC2 security group
+- **Ports:** Ensure port 8099 is open in the EC2 security group
 
 ---
 
