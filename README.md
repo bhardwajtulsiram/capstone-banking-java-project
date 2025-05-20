@@ -7,6 +7,7 @@ This project demonstrates a CI/CD pipeline for a Java-based banking application 
 ## Prerequisites
 
 - **Jenkins** server with required plugins (Pipeline, Docker, Ansible, Credentials, etc.)
+- **SonarQube** server running and accessible, with authentication tokens/credentials configured in Jenkins
 - **DockerHub** account and credentials stored in Jenkins (used for pushing images)
 - **Ansible** installed and configured on Jenkins
 - **Terraform** installed locally using VS Code
@@ -31,8 +32,8 @@ The CI/CD pipeline consists of the following automated stages (see `Jenkinsfile`
 4. **Run Tests**
    - Executes all unit and integration tests: `mvn test`
 
-5. **Quality Assurance**
-   - Runs Checkstyle to ensure code quality
+5. **Static Code Analysis with SonarQube**
+   - Runs SonarQube analysis for code quality, bugs, vulnerabilities, and code smells
 
 6. **Package Application**
    - Packages the application as a JAR
@@ -55,7 +56,7 @@ The CI/CD pipeline consists of the following automated stages (see `Jenkinsfile`
 ## Executing the Pipeline
 
 1. **Configure Jenkins:**
-   - Create credentials for DockerHub and Ansible 
+   - Create credentials for DockerHub, Ansible and SonarQube
    - Configure a pipeline job using the `Jenkinsfile` in this repo
 
 2. **Run the Pipeline:**
@@ -63,6 +64,7 @@ The CI/CD pipeline consists of the following automated stages (see `Jenkinsfile`
 
 3. **Monitor Progress:**
    - Each stage will be visible in Jenkins UI
+   - SonarQube analysis results and quality gate status will be visible in Jenkins and SonarQube dashboards
    - On success, the application will be deployed and running on the EC2 instances
 
 ---
@@ -87,6 +89,7 @@ The CI/CD pipeline consists of the following automated stages (see `Jenkinsfile`
 ## Troubleshooting
 
 - **Terraform Apply Issues:** Ensure your AWS credentials are valid and IAM permissions are sufficient
+- **SonarQube Analysis Fails:** Verify SonarQube server is reachable, authentication tokens are valid, and Jenkins is properly configured with SonarQube plugins
 - **Docker Push Fails:** Check DockerHub credentials in Jenkins
 - **Ansible SSH Issues:** Ensure Jenkins has SSH access to EC2s, and inventory file is correct
 - **Ports:** Ensure port 8099 is open in the EC2 security group
